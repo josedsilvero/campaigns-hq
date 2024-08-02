@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         DB::statement("
-       CREATE OR REPLACE VIEW public.v_tabla_match_campaign
+       CREATE OR REPLACE VIEW prod.v_tabla_match_campaign
 AS SELECT f.campaign_id AS facebook_id,
     c.campaign_id AS crossroads_id,
     COALESCE(f.campaign_name, c.campaign_name) AS campaign_name,
