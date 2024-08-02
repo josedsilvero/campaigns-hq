@@ -1,0 +1,483 @@
+@extends('layouts.app')
+
+@section('content')
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.bootstrap5.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+
+<div class=" row justify-content-center mt-3">
+    <div class="col-md-12">
+
+        @session('success')
+        <div class="alert alert-success" role="alert">
+            {{ $value }}
+        </div>
+        @endsession
+
+        <div class="card">
+            <div class="card-header">Lista de Campañas</div>
+            <div class="card-body overflow-scroll">
+                <table class="table table-striped table-bordered" id="campaigns">
+                    <thead>
+                        <tr>
+                            <th scope="col">C#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">CPA FB</th>
+                            <th scope="col">Cost</th>
+                            <th scope="col">Conv.</th>
+                            <th scope="col">Gross Rev</th>
+                            <th scope="col">Net Rev</th>
+                            <th scope="col">% Net Rev</th>
+                            <th scope="col">eCPA</th>
+                            <th scope="col">Searches</th>
+                            <th scope="col">Clicks Rev</th>
+                            <th scope="col">Conv valid.</th>
+                            <th scope="col">CTR SERP</th>
+                            <th scope="col">Avg RPC</th>
+                            <th scope="col">Budget</th>
+                            <th scope="col">Obs</th>
+                        </tr>
+                    </thead>
+
+                    <!-- Add Modal -->
+                    <div class=" modal fade" id="cpaModal-add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Campaign Note</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ route('campaign_notes.store') }}" method="post" id=edit-cpa-form>
+                                        @csrf
+
+                                        <div class="mb-3 row">
+                                            <div class="col-md-6">
+                                                <input type="hidden" class="form-control @error('campaign_id') is-invalid @enderror" name="campaign_id" id="campaign-id-input">
+                                                @error('campaign_id')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 row">
+                                            <label for="cpa" class="col-md-4 col-form-label text-md-end text-start">CPA</label>
+                                            <div class="col-md-6">
+                                                <input type="number" class="form-control @error('cpa') is-invalid @enderror" autocomplete="off" id="cpa-input" name="cpa" autofocus>
+                                                @error('cpa')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="submit" class="btn btn-primary" value="Update">Guardar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Add Modal -->
+                    <div class=" modal fade" id="budgetModal-add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Campaign Note</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ route('campaign_notes.store') }}" method="post" id=edit-cpa-form>
+                                        @csrf
+
+                                        <div class="mb-3 row">
+                                            <div class="col-md-6">
+                                                <input type="hidden" class="form-control @error('campaign_id') is-invalid @enderror" name="campaign_id" id="campaign-id-input-2">
+                                                @error('campaign_id')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 row">
+                                            <label for="cpa" class="col-md-4 col-form-label text-md-end text-start">Budget</label>
+                                            <div class="col-md-6">
+                                                <input type="number" class="form-control @error('budget') is-invalid @enderror" autocomplete="off" id="budget-input" name="budget" autofocus>
+                                                @error('budget')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="submit" class="btn btn-primary" value="Update">Guardar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Add Modal -->
+                    <div class=" modal fade" id="obsModal-add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Campaign Note</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{ route('campaign_notes.store') }}" method="post" id=edit-cpa-form>
+                                        @csrf
+
+                                        <div class="mb-3 row">
+                                            <div class="col-md-6">
+                                                <input type="hidden" class="form-control @error('campaign_id') is-invalid @enderror" name="campaign_id" id="campaign-id-input-3">
+                                                @error('campaign_id')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 row">
+                                            <label for="observation" class="col-md-4 col-form-label text-md-end text-start">Observation</label>
+                                            <div class="col-md-6">
+                                                <textarea class="form-control @error('observation') is-invalid @enderror" id="observation" name="observation" autofocus>{{ old('observation') }}</textarea>
+                                                @error('observation')
+                                                <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="submit" class="btn btn-primary" value="Update">Guardar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <tbody>
+                        <tr>
+                            @forelse ($campaigns as $campaign)
+                            @if (!is_null($campaign->note_id))
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="cpaModal-edit-{{$campaign->note_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Campaign Note</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{{ route('campaign_notes.update', $campaign->note_id) }}" method="post">
+                                                @csrf
+                                                @method("PUT")
+
+                                                <div class="mb-3 row">
+                                                    <div class="col-md-6">
+                                                        <input type="hidden" class="form-control @error('campaign_id') is-invalid @enderror" name="campaign_id" id="edit-campaign-id-input" value="{{ $campaign->facebook_id }}">
+                                                        @error('campaign_id')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+
+                                                <div class="mb-3 row">
+                                                    <label for="cpa" class="col-md-4 col-form-label text-md-end text-start">CPA</label>
+                                                    <div class="col-md-6">
+                                                        <input type="number" class="form-control @error('cpa') is-invalid @enderror" autocomplete="off" id="edit-cpa-input" name="cpa" value="{{ $campaign->cpa }}" autofocus>
+                                                        @error('cpa')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-primary" value="Update">Guardar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="budgetModal-edit-{{$campaign->note_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Campaign Note</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{{ route('campaign_notes.update', $campaign->note_id) }}" method="post">
+                                                @csrf
+                                                @method("PUT")
+
+                                                <div class="mb-3 row">
+                                                    <div class="col-md-6">
+                                                        <input type="hidden" class="form-control @error('campaign_id') is-invalid @enderror" name="campaign_id" id="edit-campaign-id-input" value="{{ $campaign->facebook_id }}">
+                                                        @error('campaign_id')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                @if(!is_null($campaign->cpa))
+                                                <div class="mb-3 row">
+                                                    <div class="col-md-6">
+                                                        <input type="hidden" class="form-control @error('cpa') is-invalid @enderror" name="cpa" id="edit-cpa-input" value="{{ $campaign->cpa }}">
+                                                        @error('cpa')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                @endif
+                                                <div class="mb-3 row">
+                                                    <label for="budget" class="col-md-4 col-form-label text-md-end text-start">Budget</label>
+                                                    <div class="col-md-6">
+                                                        <input type="number" class="form-control @error('budget') is-invalid @enderror" autocomplete="off" id="edit-budget-input" name="budget" value="{{ $campaign->budget }}" autofocus>
+                                                        @error('budget')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-primary" value="Update">Guardar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="obsModal-edit-{{$campaign->note_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Campaign Note</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{{ route('campaign_notes.update', $campaign->note_id) }}" method="post">
+                                                @csrf
+                                                @method("PUT")
+
+                                                <div class="mb-3 row">
+                                                    <div class="col-md-6">
+                                                        <input type="hidden" class="form-control @error('campaign_id') is-invalid @enderror" name="campaign_id" id="edit-campaign-id-input" value="{{ $campaign->facebook_id }}">
+                                                        @error('campaign_id')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                @if(!is_null($campaign->cpa))
+                                                <div class="mb-3 row">
+                                                    <div class="col-md-6">
+                                                        <input type="hidden" class="form-control @error('cpa') is-invalid @enderror" name="cpa" id="edit-cpa-input" value="{{ $campaign->cpa }}">
+                                                        @error('cpa')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                @endif
+                                                <div class="mb-3 row">
+                                                    <div class="col-md-6">
+                                                        <input type="hidden" class="form-control @error('budget') is-invalid @enderror" autocomplete="off" id="edit-budget-input" name="budget" value="{{ $campaign->budget }}" autofocus>
+                                                        @error('budget')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 row">
+                                                    <label for="observation" class="col-md-4 col-form-label text-md-end text-start">Observation</label>
+                                                    <div class="col-md-6">
+                                                        <textarea class="form-control @error('observation') is-invalid @enderror" id="observation" name="observation" autofocus>{{ $campaign->observation }}</textarea>
+                                                        @error('observation')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-primary" value="Update">Guardar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $campaign->campaign_name }}</td>
+                            <td>
+                                <div style=" display:inline-block">
+                                    {{ $campaign->cpa }}
+                                    @if (is_null($campaign->note_id))
+                                    <div style="float: right;">
+                                        <button type="button" class="btn btn-primary btn-sm float-right edit-cpa-button" data-bs-toggle="modal" href="#cpaModal-add" data-record-id="{{$campaign->facebook_id}}">
+                                            <i class="bi bi-pencil-square"></i></button>
+                                    </div>
+                                    @else
+                                    <div style="float: right;">
+                                        <button type="button" class="btn btn-primary btn-sm float-right update-cpa-button" data-bs-toggle="modal" href="#cpaModal-edit-{{$campaign->note_id}}">
+                                            <i class="bi bi-pencil-square"></i></button>
+                                    </div>
+                                    @endif
+                            </td>
+                            <td>{{ $campaign->spend }}</td>
+                            <td>{{ $campaign->purchase_value }}</td>
+                            <td>{{ $campaign->revenue }}</td>
+                            @if($campaign->net_revenue<0) <td style="color: red">{{$campaign->net_revenue }}</td>
+                                <td style="color: red">{{ $campaign->net_revenue_perc }}%</td>
+                                @elseif($campaign->net_revenue_perc>=50 && $campaign->net_revenue>10)
+                                <td style="background-color: yellow">{{$campaign->net_revenue }}</td>
+                                <td style="background-color: yellow">{{ $campaign->net_revenue_perc }}%</td>
+                                @else
+                                <td>{{ $campaign->net_revenue }}</td>
+                                <td>{{ $campaign->net_revenue_perc }}%</td>
+                                @endif()
+                                <td>{{ $campaign->ecpa }}</td>
+                                <td>{{ $campaign->lander_visitors }}</td>
+                                <td>{{ $campaign->revenue_events }}</td>
+                                <td>{{ $campaign->conv_valid }}%</td>
+                                <td>{{ $campaign->ctr_serp }}%</td>
+                                <td>{{ $campaign->avg_rpc }}</td>
+                                <td>
+                                    <div style=" display:inline-block">
+                                        {{ $campaign->budget }}
+                                        @if (is_null($campaign->note_id))
+                                        <div style="float: right;">
+                                            <button type="button" class="btn btn-primary btn-sm float-right edit-cpa-button" data-bs-toggle="modal" href="#budgetModal-add" data-record-id='{{$campaign->facebook_id}}'>
+                                                <i class="bi bi-pencil-square"></i></button>
+                                        </div>
+                                        @else
+                                        <div style="float: right;">
+                                            <button type="button" class="btn btn-primary btn-sm float-right update-cpa-button" data-bs-toggle="modal" href="#budgetModal-edit-{{$campaign->note_id}}">
+                                                <i class="bi bi-pencil-square"></i></button>
+                                        </div>
+                                        @endif
+                                </td>
+                                <td>
+                                    <div style=" display:inline-block">
+                                        {{ $campaign->observation }}
+                                        @if (is_null($campaign->note_id))
+                                        <div style="float: right;">
+                                            <button type="button" class="btn btn-primary btn-sm float-right edit-cpa-button" data-bs-toggle="modal" href="#obsModal-add" data-record-id='{{$campaign->facebook_id}}'>
+                                                <i class="bi bi-pencil-square"></i></button>
+                                        </div>
+                                        @else
+                                        <div style="float: right;">
+                                            <button type="button" class="btn btn-primary btn-sm float-right update-cpa-button" data-bs-toggle="modal" href="#obsModal-edit-{{$campaign->note_id}}">
+                                                <i class="bi bi-pencil-square"></i></button>
+                                        </div>
+                                        @endif
+                                </td>
+                        </tr>
+                        @empty
+                        <td colspan="6">
+                            <span class="text-danger">
+                                <strong>No se encontraron campañas</strong>
+                            </span>
+                        </td>
+                        @endforelse
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" style="text-align:right">Total Cost:</th>
+                            <th></th>
+                            <th colspan="2" style="text-align:right">Total Profit:</th>
+                            <th></th>
+                            <th colspan="2" style="text-align:right">Total %Net:</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                {{ $campaigns->links() }}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.1.3/js/dataTables.bootstrap5.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#campaigns').DataTable({
+            'footerCallback': function(row, data, start, end, display) {
+                let api = this.api();
+
+                // Remove the formatting to get integer data for summation
+                let intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i :
+                        0;
+                };
+
+                // Total over all pages
+                totalCost = api
+                    .column(3)
+                    .data()
+                    .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+                totalProfit = api
+                    .column(6)
+                    .data()
+                    .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+                // Total over this page
+                pageTotalCost = api
+                    .column(3, {
+                        page: 'current'
+                    })
+                    .data()
+                    .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+                pageTotalProfit = api
+                    .column(6, {
+                        page: 'current'
+                    })
+                    .data()
+                    .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+
+                pageTotalCost = pageTotalCost.toFixed(2);
+                totalCost = totalCost.toFixed(2);
+                pageTotalProfit = pageTotalProfit.toFixed(2);
+                totalProfit = totalProfit.toFixed(2);
+                pageTotalNetPerc = ((pageTotalProfit / pageTotalCost) * 100).toFixed(2);
+                totalNetPerc = ((totalProfit / totalCost) * 100).toFixed(2);
+                // Update footer
+                api.column(3).footer().innerHTML =
+                    '$' + pageTotalCost + ' ($' + totalCost + ' total)';
+                api.column(6).footer().innerHTML =
+                    '$' + pageTotalProfit + ' ($' + totalProfit + ' total)';
+                api.column(9).footer().innerHTML =
+                    pageTotalNetPerc + '% (' + totalNetPerc + '% total)';
+            },
+            'pageLength': 100
+        });
+
+        $('.modal').on('shown.bs.modal', function() {
+            $(this).find('[autofocus]').focus();
+        });
+    });
+
+    $(document).on('click', '.edit-cpa-button', function() {
+        $('#campaign-id-input').val($(this).data('record-id'));
+        $('#campaign-id-input-2').val($(this).data('record-id'));
+        $('#campaign-id-input-3').val($(this).data('record-id'));
+    });
+</script>
