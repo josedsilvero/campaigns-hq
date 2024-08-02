@@ -36,6 +36,7 @@
                             <th scope="col">Avg RPC</th>
                             <th scope="col">Budget</th>
                             <th scope="col">Obs</th>
+                            <th scope="col">Date</th>
                         </tr>
                     </thead>
 
@@ -374,6 +375,7 @@
                                         </div>
                                         @endif
                                 </td>
+                                <td>{{ $campaign->created_at->format('d/m/Y') }}</td>
                         </tr>
                         @empty
                         <td colspan="6">
