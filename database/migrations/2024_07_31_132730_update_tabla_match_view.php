@@ -29,9 +29,9 @@ AS SELECT f.campaign_id AS facebook_id,
     n.cpa,
     n.budget,
     n.observation
-   FROM v_facebook_campaign f
-     FULL JOIN v_crossroads_campaign c ON lower(f.domain) = lower(c.revenue_domain_name::text)
-     FULL JOIN campaign_notes n ON f.campaign_id = n.campaign_id
+   FROM prod.v_facebook_campaign f
+     FULL JOIN prod.v_crossroads_campaign c ON lower(f.domain) = lower(c.revenue_domain_name::text)
+     FULL JOIN public.campaign_notes n ON f.campaign_id = n.campaign_id
   ORDER BY c.campaign_id;
       ");
     }

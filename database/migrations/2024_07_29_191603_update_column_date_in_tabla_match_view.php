@@ -26,8 +26,8 @@ AS SELECT f.campaign_id AS facebook_id,
     COALESCE(substring(substring(f.campaign_name, '-[A-Z]{3}-'::text), 2, 3), substring(substring(c.campaign_name, '_[A-Z]{3}'::text), 2, 3), 'CCH'::text) AS user_name,
     f.account_id,
     COALESCE(c.date, f.date_start) AS created_at
-   FROM v_facebook_campaign f
-     FULL JOIN v_crossroads_campaign c ON lower(f.domain) = lower(c.revenue_domain_name::text)
+   FROM prod.v_facebook_campaign f
+     FULL JOIN prod.v_crossroads_campaign c ON lower(f.domain) = lower(c.revenue_domain_name::text)
   ORDER BY c.campaign_id;
       ");
     }
