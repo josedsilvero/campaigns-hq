@@ -38,6 +38,7 @@
         <main>
             <div class="container">
                 @yield('content')
+                {{ $slot ?? ''}}
             </div>
     </div>
     </main>
