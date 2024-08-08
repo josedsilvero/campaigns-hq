@@ -16,7 +16,7 @@
 
         <div class="card">
             <div class="card-header">Lista de Campañas</div>
-            <div class="row pb-3">
+            <div class="row pb-3" style="padding-top: 0.5em;">
                 <div class="col-md-3">
                     <label>Min date:</label>
                     <input type="date" id="min" name="min" value="<?php echo date("Y-m-d", strtotime("yesterday")); ?>" placeholder="dd-mm-yyyy" class="date-range-filter"></>
@@ -507,9 +507,7 @@
             var min = $('#min').val();
             minDate = stringToDate(min, "yyyy-mm-dd", "-");
             var max = $('#max').val();
-            console.log('min:', minDate);
             maxDate = stringToDate(max, "yyyy-mm-dd", "-");
-            console.log('max:', maxDate);
             table.draw();
         });
     });
