@@ -16,6 +16,16 @@
 
         <div class="card">
             <div class="card-header">Lista de Campañas</div>
+            <div class="row pb-3">
+                <div class="col-md-3">
+                    <label>Min date:</label>
+                    <input type="date" id="min" name="min" value="<?php echo date("Y-m-d", strtotime("yesterday")); ?>" placeholder="dd-mm-yyyy" class="date-range-filter"></>
+                </div>
+                <div class="col-md-3">
+                    <label>Max date:</label>
+                    <input type="date" id="max" name="max" value="<?php echo date("Y-m-d", strtotime("yesterday")); ?>" placeholder="dd-mm-yyyy" class="date-range-filter"></>
+                </div>
+            </div>
             <div class="card-body overflow-scroll">
                 <table class="table table-striped table-bordered" id="campaigns">
                     <thead>
@@ -413,9 +423,25 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.1.3/js/dataTables.bootstrap5.js"></script>
+
 <script>
+    let minDate, maxDate;
+
+    function stringToDate(_date, _format, _delimiter) {
+        var formatLowerCase = _format.toLowerCase();
+        var formatItems = formatLowerCase.split(_delimiter);
+        var dateItems = _date.split(_delimiter);
+        var monthIndex = formatItems.indexOf("mm");
+        var dayIndex = formatItems.indexOf("dd");
+        var yearIndex = formatItems.indexOf("yyyy");
+        var month = parseInt(dateItems[monthIndex]);
+        month -= 1;
+        var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+        return formatedDate;
+    }
+
     $(document).ready(function() {
-        $('#campaigns').DataTable({
+        table = $('#campaigns').DataTable({
             'footerCallback': function(row, data, start, end, display) {
                 let api = this.api();
 
@@ -475,7 +501,38 @@
         $('.modal').on('shown.bs.modal', function() {
             $(this).find('[autofocus]').focus();
         });
+
+        // Re-draw the table when the a date range filter changes
+        $('.date-range-filter').change(function() {
+            var min = $('#min').val();
+            minDate = stringToDate(min, "yyyy-mm-dd", "-");
+            var max = $('#max').val();
+            console.log('min:', minDate);
+            maxDate = stringToDate(max, "yyyy-mm-dd", "-");
+            console.log('max:', maxDate);
+            table.draw();
+        });
     });
+
+
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var min = $('#min').val();
+            minDate = stringToDate(min, "yyyy-mm-dd", "-");
+            var max = $('#max').val();
+            maxDate = stringToDate(max, "yyyy-mm-dd", "-");
+            var date = stringToDate(data[16], "dd/MM/yyyy", "/") || 0; // Our date column in the table
+            if (
+                (minDate === null && maxDate === null) ||
+                (minDate === null && date <= maxDate) ||
+                (minDate <= date && maxDate === null) ||
+                (minDate <= date && date <= maxDate)
+            ) {
+                return true;
+            }
+            return false;
+        }
+    );
 
     $(document).on('click', '.edit-cpa-button', function() {
         $('#campaign-id-input').val($(this).data('record-id'));
