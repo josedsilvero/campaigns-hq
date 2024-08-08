@@ -5,6 +5,26 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.bootstrap5.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
 
+<style>
+    .buttonContainer {
+        float: right;
+        width: 15px;
+        margin-left: 10px;
+    }
+
+    .myButton {
+        background-color: rgb(13, 110, 253);
+        border-bottom-color: rgb(13, 110, 253);
+        color: rgb(255, 255, 255);
+        float: right;
+
+    }
+
+    .campaignName {
+        color: rgb(56, 88, 152);
+    }
+</style>
+
 <div class=" row justify-content-center mt-3">
     <div class="col-md-12">
 
@@ -321,19 +341,27 @@
                             </div>
                             @endif
                             <th scope="row">{{ $loop->iteration }}</th>
-                            <td>{{ $campaign->campaign_name }}</td>
                             <td>
+                                <span class="campaignName">
+                                    {{ $campaign->campaign_name }}
+                                </span>
+                            </td>
+                            <td class="text-right">
                                 <div style=" display:inline-block">
-                                    {{ $campaign->cpa }}
                                     @if (is_null($campaign->note_id))
-                                    <div style="float: right;">
-                                        <button type="button" class="btn btn-primary btn-sm float-right edit-cpa-button" data-bs-toggle="modal" href="#cpaModal-add" data-record-id="{{$campaign->facebook_id}}">
-                                            <i class="bi bi-pencil-square"></i></button>
+                                    <span>0</span>
+                                    <div class="buttonContainer">
+                                        <button type="button" class="myButton edit-cpa-button" data-bs-toggle="modal" href="#cpaModal-add" data-record-id="{{$campaign->facebook_id}}">
+                                            <i class="bi bi-pencil-square" style="font-size: small;"></i></button>
                                     </div>
                                     @else
-                                    <div style="float: right;">
-                                        <button type="button" class="btn btn-primary btn-sm float-right update-cpa-button" data-bs-toggle="modal" href="#cpaModal-edit-{{$campaign->note_id}}">
-                                            <i class="bi bi-pencil-square"></i></button>
+                                    @if (is_null($campaign->cpa))
+                                    <span>0</span>
+                                    @endif
+                                    {{ $campaign->cpa }}
+                                    <div class="buttonContainer">
+                                        <button type="button" class="myButton update-cpa-button" data-bs-toggle="modal" href="#cpaModal-edit-{{$campaign->note_id}}">
+                                            <i class="bi bi-pencil-square" style="font-size: small;"></i></button>
                                     </div>
                                     @endif
                             </td>
@@ -357,31 +385,36 @@
                                 <td>{{ $campaign->avg_rpc }}</td>
                                 <td>
                                     <div style=" display:inline-block">
-                                        {{ $campaign->budget }}
                                         @if (is_null($campaign->note_id))
-                                        <div style="float: right;">
-                                            <button type="button" class="btn btn-primary btn-sm float-right edit-cpa-button" data-bs-toggle="modal" href="#budgetModal-add" data-record-id='{{$campaign->facebook_id}}'>
-                                                <i class="bi bi-pencil-square"></i></button>
+                                        <span>0</span>
+                                        <div class="buttonContainer">
+                                            <button type="button" class="myButton edit-cpa-button" data-bs-toggle="modal" href="#budgetModal-add" data-record-id='{{$campaign->facebook_id}}'>
+                                                <i class="bi bi-pencil-square" style="font-size: small;"></i></button>
                                         </div>
                                         @else
-                                        <div style="float: right;">
-                                            <button type="button" class="btn btn-primary btn-sm float-right update-cpa-button" data-bs-toggle="modal" href="#budgetModal-edit-{{$campaign->note_id}}">
-                                                <i class="bi bi-pencil-square"></i></button>
+                                        @if (is_null($campaign->budget))
+                                        <span>0</span>
+                                        @endif
+                                        {{ $campaign->budget }}
+                                        <div class="buttonContainer">
+                                            <button type="button" class="myButton update-cpa-button" data-bs-toggle="modal" href="#budgetModal-edit-{{$campaign->note_id}}">
+                                                <i class="bi bi-pencil-square" style="font-size: small;"></i></button>
                                         </div>
                                         @endif
                                 </td>
                                 <td>
                                     <div style=" display:inline-block">
-                                        {{ $campaign->observation }}
                                         @if (is_null($campaign->note_id))
-                                        <div style="float: right;">
-                                            <button type="button" class="btn btn-primary btn-sm float-right edit-cpa-button" data-bs-toggle="modal" href="#obsModal-add" data-record-id='{{$campaign->facebook_id}}'>
-                                                <i class="bi bi-pencil-square"></i></button>
+                                        <span></span>
+                                        <div class="buttonContainer">
+                                            <button type=" button" class="myButton edit-cpa-button" data-bs-toggle="modal" href="#obsModal-add" data-record-id='{{$campaign->facebook_id}}'>
+                                                <i class="bi bi-pencil-square" style="font-size: small;"></i></button>
                                         </div>
                                         @else
-                                        <div style="float: right;">
-                                            <button type="button" class="btn btn-primary btn-sm float-right update-cpa-button" data-bs-toggle="modal" href="#obsModal-edit-{{$campaign->note_id}}">
-                                                <i class="bi bi-pencil-square"></i></button>
+                                        {{ $campaign->observation }}
+                                        <div class="buttonContainer">
+                                            <button type="button" class="myButton update-cpa-button" data-bs-toggle="modal" href="#obsModal-edit-{{$campaign->note_id}}">
+                                                <i class="bi bi-pencil-square" style="font-size: small;"></i></button>
                                         </div>
                                         @endif
                                 </td>
