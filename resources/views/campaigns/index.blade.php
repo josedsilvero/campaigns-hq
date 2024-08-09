@@ -45,6 +45,9 @@
                     <label>Max date:</label>
                     <input type="date" id="max" name="max" value="<?php echo date("Y-m-d", strtotime("yesterday")); ?>" placeholder="dd-mm-yyyy" class="date-range-filter"></>
                 </div>
+                <div class="col-md-3">
+                    <button id="export" class="btn btn-success"><i class="bi bi-file-excel"></i>Export</button>
+                </div>
             </div>
             <div class="card-body overflow-scroll">
                 <table class="table table-striped table-bordered" id="campaigns">
@@ -94,7 +97,7 @@
                                         <div class="mb-3 row">
                                             <label for="cpa" class="col-md-4 col-form-label text-md-end text-start">CPA</label>
                                             <div class="col-md-6">
-                                                <input type="number" class="form-control @error('cpa') is-invalid @enderror" autocomplete="off" id="cpa-input" name="cpa" autofocus>
+                                                <input type="number" class="form-control @error('cpa') is-invalid @enderror" autocomplete="off" id="cpa-input" name="cpa" step="0.01" autofocus>
                                                 @error('cpa')
                                                 <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -218,7 +221,7 @@
                                                 <div class="mb-3 row">
                                                     <label for="cpa" class="col-md-4 col-form-label text-md-end text-start">CPA</label>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control @error('cpa') is-invalid @enderror" autocomplete="off" id="edit-cpa-input" name="cpa" value="{{ $campaign->cpa }}" autofocus>
+                                                        <input type="number" class="form-control @error('cpa') is-invalid @enderror" autocomplete="off" id="edit-cpa-input" name="cpa" value="{{ $campaign->cpa }}" step="0.01" autofocus>
                                                         @error('cpa')
                                                         <span class="text-danger">{{ $message }}</span>
                                                         @enderror
@@ -372,12 +375,25 @@
                                 <td style="color: red">{{ $campaign->net_revenue_perc }}%</td>
                                 @elseif($campaign->net_revenue_perc>=50 && $campaign->net_revenue>10)
                                 <td style="background-color: yellow">{{$campaign->net_revenue }}</td>
+                                @if($campaign->net_revenue_perc>=150)
+                                <td style="background-color: lime">{{ $campaign->net_revenue_perc }}%</td>
+                                @else
                                 <td style="background-color: yellow">{{ $campaign->net_revenue_perc }}%</td>
+                                @endif
                                 @else
                                 <td>{{ $campaign->net_revenue }}</td>
+                                @if($campaign->net_revenue_perc>150)
+                                <td style="background-color: lime">{{ $campaign->net_revenue_perc }}%</td>
+                                @else
                                 <td>{{ $campaign->net_revenue_perc }}%</td>
+                                @endif
                                 @endif()
+                                @if ($campaign->ecpa
+                                >=($campaign->cpa*1.5))
+                                <td style="background-color:aqua">{{ $campaign->ecpa }}</td>
+                                @else
                                 <td>{{ $campaign->ecpa }}</td>
+                                @endif
                                 <td>{{ $campaign->lander_visitors }}</td>
                                 <td>{{ $campaign->revenue_events }}</td>
                                 <td>{{ $campaign->conv_valid }}%</td>
@@ -436,6 +452,8 @@
                             <th></th>
                             <th colspan="2" style="text-align:right">Total %Net:</th>
                             <th></th>
+                            <th colspan="2" style="text-align:right">Profit Chena:</th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -456,7 +474,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.1.3/js/dataTables.bootstrap5.js"></script>
-
+<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
 <script>
     let minDate, maxDate;
 
@@ -518,6 +536,8 @@
                 totalCost = totalCost.toFixed(2);
                 pageTotalProfit = pageTotalProfit.toFixed(2);
                 totalProfit = totalProfit.toFixed(2);
+                pageProfitChena = (pageTotalProfit / 2).toFixed(2);
+                totalProfitChena = (totalProfit / 2).toFixed(2);
                 pageTotalNetPerc = ((pageTotalProfit / pageTotalCost) * 100).toFixed(2);
                 totalNetPerc = ((totalProfit / totalCost) * 100).toFixed(2);
                 // Update footer
@@ -527,8 +547,18 @@
                     '$' + pageTotalProfit + ' ($' + totalProfit + ' total)';
                 api.column(9).footer().innerHTML =
                     pageTotalNetPerc + '% (' + totalNetPerc + '% total)';
+                api.column(12).footer().innerHTML =
+                    '$' + pageProfitChena + ' ($' + totalProfitChena + ' total)';
             },
-            'pageLength': 100
+            'pageLength': 100,
+            'buttons': [{
+                extend: 'excel',
+                exportOptions: {
+                    modifier: {
+                        page: 'current'
+                    }
+                }
+            }]
         });
 
         $('.modal').on('shown.bs.modal', function() {
@@ -542,6 +572,20 @@
             var max = $('#max').val();
             maxDate = stringToDate(max, "yyyy-mm-dd", "-");
             table.draw();
+        });
+
+        $("#export").click(function() {
+            let table = document.getElementsByTagName("table");
+            let currentDate = new Date().toLocaleDateString();
+            let dateStamp = currentDate.replaceAll('/', '-');
+            let docName = 'CampaignsReport' + dateStamp + '.xlsx';
+            TableToExcel.convert(table[0], {
+                name: docName,
+                sheet: {
+                    name: `CampaignsReport`
+                }
+            });
+
         });
     });
 
@@ -564,6 +608,7 @@
             return false;
         }
     );
+
 
     $(document).on('click', '.edit-cpa-button', function() {
         $('#campaign-id-input').val($(this).data('record-id'));
