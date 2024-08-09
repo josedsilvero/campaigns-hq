@@ -388,9 +388,9 @@
                                 <td>{{ $campaign->net_revenue_perc }}%</td>
                                 @endif
                                 @endif()
-                                @if ($campaign->ecpa
+                                @if ($campaign->cpa!=0 && $campaign->ecpa
                                 >=($campaign->cpa*1.5))
-                                <td style="background-color:aqua">{{ $campaign->ecpa }}</td>
+                                <td style="background-color:cyan">{{ $campaign->ecpa }}</td>
                                 @else
                                 <td>{{ $campaign->ecpa }}</td>
                                 @endif
