@@ -33,7 +33,11 @@
             {{ $value }}
         </div>
         @endsession
-
+        <?php
+        $dateTime = new DateTime($latestRecord);
+        $formattedDate = $dateTime->format('F d, Y h:i A');
+        echo 'Latest update: ', $formattedDate;
+        ?>
         <div class="card">
             <div class="card-header">Lista de Campañas</div>
             <div class="row pb-3" style="padding-top: 0.5em; padding-left: 1.5em;">

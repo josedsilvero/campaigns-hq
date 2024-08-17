@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Auth;
 use App\Models\ViewTablaMatchCampaign;
+use Illuminate\Support\Facades\DB;
 
 class ViewTablaMatchCampaignController extends Controller
 {
@@ -18,8 +18,9 @@ class ViewTablaMatchCampaignController extends Controller
         $campaigns = ViewTablaMatchCampaign::latest()->paginate(100);
         /*$user_name = Auth::user()->user_name;
         $campaigns = ViewTablaMatchCampaign::where('user_name', $user_name);*/
+        $latestRecord = DB::table('campaign')->max('update_date');
 
-        return view('campaigns.index', compact('campaigns'));
+        return view('campaigns.index', compact('campaigns'))->with('latestRecord', $latestRecord);
     }
 
     public function edit(ViewTablaMatchCampaign $campaign): View
