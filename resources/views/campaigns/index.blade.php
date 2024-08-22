@@ -35,6 +35,7 @@
         @endsession
         <?php
         $dateTime = new DateTime($latestRecord);
+        $dateTime->setTimezone(new DateTimeZone('America/Asuncion'));
         $formattedDate = $dateTime->format('F d, Y h:i A');
         echo 'Latest update: ', $formattedDate;
         ?>
@@ -60,6 +61,7 @@
                             <th scope="col">C#</th>
                             <th scope="col">Name</th>
                             <th scope="col">CPA FB</th>
+                            <th scope="col">Budget</th>
                             <th scope="col">Cost</th>
                             <th scope="col">Conv.</th>
                             <th scope="col">Gross Rev</th>
@@ -71,7 +73,6 @@
                             <th scope="col">Conv valid.</th>
                             <th scope="col">CTR SERP</th>
                             <th scope="col">Avg RPC</th>
-                            <th scope="col">Budget</th>
                             <th scope="col">Obs</th>
                             <th scope="col">Date</th>
                         </tr>
@@ -186,6 +187,9 @@
                             <td>
                                 {{$campaign->cpa}}
                             </td>
+                            <td>
+                                {{$campaign->budget}}
+                            </td>
                             <td>{{ $campaign->spend }}</td>
                             <td>{{ $campaign->purchase_value }}</td>
                             <td>{{ $campaign->revenue }}</td>
@@ -212,9 +216,6 @@
                                 <td>{{ $campaign->conv_valid }}%</td>
                                 <td>{{ $campaign->ctr_serp }}%</td>
                                 <td>{{ $campaign->avg_rpc }}</td>
-                                <td>
-                                    {{$campaign->budget}}
-                                </td>
                                 <td>
                                     <div style=" display:inline-block">
                                         @if (is_null($campaign->note_id))
@@ -243,7 +244,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="3" style="text-align:right">Total Cost:</th>
+                            <th colspan="4" style="text-align:right">Total Cost:</th>
                             <th></th>
                             <th colspan="2" style="text-align:right">Total Profit:</th>
                             <th></th>
@@ -304,25 +305,25 @@
 
                 // Total over all pages
                 totalCost = api
-                    .column(3)
+                    .column(4)
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 totalProfit = api
-                    .column(6)
+                    .column(7)
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 // Total over this page
                 pageTotalCost = api
-                    .column(3, {
+                    .column(4, {
                         page: 'current'
                     })
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 pageTotalProfit = api
-                    .column(6, {
+                    .column(7, {
                         page: 'current'
                     })
                     .data()
@@ -338,13 +339,13 @@
                 pageTotalNetPerc = ((pageTotalProfit / pageTotalCost) * 100).toFixed(2);
                 totalNetPerc = ((totalProfit / totalCost) * 100).toFixed(2);
                 // Update footer
-                api.column(3).footer().innerHTML =
+                api.column(4).footer().innerHTML =
                     '$' + pageTotalCost + ' ($' + totalCost + ' total)';
-                api.column(6).footer().innerHTML =
+                api.column(7).footer().innerHTML =
                     '$' + pageTotalProfit + ' ($' + totalProfit + ' total)';
-                api.column(9).footer().innerHTML =
+                api.column(10).footer().innerHTML =
                     pageTotalNetPerc + '% (' + totalNetPerc + '% total)';
-                api.column(12).footer().innerHTML =
+                api.column(13).footer().innerHTML =
                     '$' + pageProfitChena + ' ($' + totalProfitChena + ' total)';
             },
             'pageLength': 100,
