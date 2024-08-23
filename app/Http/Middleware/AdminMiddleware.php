@@ -17,7 +17,7 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $role = Auth::user()->role_id;
-        if ($role === null || $role === 2) {
+        if ($role === null || $role !== 1) {
             return response('Admin account required.', 401);
         } else {
             return $next($request);
