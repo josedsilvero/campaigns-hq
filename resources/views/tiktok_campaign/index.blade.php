@@ -82,7 +82,7 @@
 <script>
     $(document).ready(function() {
         table = $('#tiktok_campaigns').DataTable({
-            'pageLength': 100
+            "paging": false,
         });
     });
 </script>

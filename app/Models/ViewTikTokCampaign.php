@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class ViewTikTokCampaign extends Model
 {
     use HasFactory;
-    public $table = "v_tik_tok_campaign";
+    public $table = "v_match_tiktok";
 
     protected static function booted(): void
     {

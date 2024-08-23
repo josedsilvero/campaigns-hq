@@ -9,7 +9,7 @@ class TikTokCampaignController extends Controller
 {
     public function index()
     {
-        $campaigns = TikTokCampaign::latest()->paginate(100);
+        $campaigns = TikTokCampaign::latest()->paginate(200);
         return view('tiktok_campaign.index', compact('campaigns'));
     }
 

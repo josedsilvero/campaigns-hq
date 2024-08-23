@@ -19,17 +19,20 @@
     <table class="table table-striped table-bordered" id="tiktok_campaigns">
         <thead>
             <tr>
-                <th scope="col">C#</th>
+                <th>C#</th>
                 <th>Campaign Name</th>
-                <th>Primary Status</th>
-                <th>Conversions</th>
-                <th>Cost per Conversion</th>
                 <th>Cost</th>
-                <th>CTR</th>
-                <th>Clicks</th>
-                <th>CPC</th>
-                <th>Frequency</th>
-                <th>Currency</th>
+                <th>Conversions</th>
+                <th>Gross Rev.</th>
+                <th>Net Rev</th>
+                <th>% Net Rev</th>
+                <th>eCPA</th>
+                <th>Searches</th>
+                <th>Clicks Rev</th>
+                <th>Conv valid.</th>
+                <th>CTR SERP</th>
+                <th>Avg RPC</th>
+                <th>Date</th>
             </tr>
         </thead>
         <tbody>
@@ -43,25 +46,32 @@
                         {{ $list->campaign_name }}
                     </span>
                 </td>
-                <td>{{ $list->primary_status }}</td>
+                <td>{{ $list->cost }}</td>
                 <td>{{ $list->conversions }}</td>
-                <td>{{ $list->cost_per_conversion }}</td>
+                <td>{{ $list->revenue }}</td>
                 <td>
-                    {{$list->cost}}
+                    {{$list->net_revenue}}
                 </td>
-                <td>{{ $list->ctr }}</td>
-                <td>{{ $list->clicks }}</td>
-                <td>{{ $list->cpc }}</td>
-                <td>{{ $list->frequency }}</td>
-                <td>{{ $list->currency }}</td>
+                <td>{{ $list->net_revenue_perc }}</td>
+                <td>{{ $list->ecpa }}</td>
+                <td>{{ $list->lander_visitors }}</td>
+                <td>{{ $list->revenue_events }}</td>
+                <td>{{ $list->conv_valid }}</td>
+                <td>{{ $list->ctr_serp }}</td>
+                <td>{{ $list->avg_rpc }}</td>
+                <td>{{ $list->created_at->format('d/m/Y') }}</td>
             </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="3" style="text-align:right">Total Conv.:</th>
+                <th colspan="2" style="text-align:right">Total Cost:</th>
                 <th></th>
-                <th colspan="1" style="text-align:right">Total Cost:</th>
+                <th colspan="1" style="text-align:right">Total Profit:</th>
+                <th></th>
+                <th colspan="2" style="text-align:right">Total %Net:</th>
+                <th></th>
+                <th colspan="2" style="text-align:right">Profit Chena:</th>
                 <th></th>
             </tr>
         </tfoot>
@@ -93,25 +103,25 @@
 
                 // Total over all pages
                 totalCost = api
-                    .column(5)
+                    .column(2)
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 totalProfit = api
-                    .column(3)
+                    .column(4)
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 // Total over this page
                 pageTotalCost = api
-                    .column(5, {
+                    .column(2, {
                         page: 'current'
                     })
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 pageTotalProfit = api
-                    .column(3, {
+                    .column(4, {
                         page: 'current'
                     })
                     .data()
@@ -121,14 +131,22 @@
                 totalCost = totalCost.toFixed(2);
                 pageTotalProfit = pageTotalProfit.toFixed(2);
                 totalProfit = totalProfit.toFixed(2);
+                pageProfitChena = (pageTotalProfit / 2).toFixed(2);
+                totalProfitChena = (totalProfit / 2).toFixed(2);
+                pageTotalNetPerc = ((pageTotalProfit / pageTotalCost) * 100).toFixed(2);
+                totalNetPerc = ((totalProfit / totalCost) * 100).toFixed(2);
 
                 // Update footer
-                api.column(5).footer().innerHTML =
+                api.column(2).footer().innerHTML =
                     '$' + pageTotalCost + ' ($' + totalCost + ' total)';
-                api.column(3).footer().innerHTML =
+                api.column(4).footer().innerHTML =
                     '$' + pageTotalProfit + ' ($' + totalProfit + ' total)';
+                api.column(7).footer().innerHTML =
+                    pageTotalNetPerc + '% (' + totalNetPerc + '% total)';
+                api.column(10).footer().innerHTML =
+                    '$' + pageProfitChena + ' ($' + totalProfitChena + ' total)';
             },
-            'pageLength': 100
+            paging: false
         });
 
         $("#export").click(function() {

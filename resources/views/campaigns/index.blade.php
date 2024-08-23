@@ -23,6 +23,11 @@
     .campaignName {
         color: rgb(56, 88, 152);
     }
+
+    h2 {
+        margin-left: 0.5em;
+        font-size: 20px;
+    }
 </style>
 
 <div class=" row justify-content-center mt-3">
@@ -54,7 +59,14 @@
                     <button id="export" class="btn btn-success"><i class="bi bi-file-excel"></i>Export</button>
                 </div>
             </div>
+
             <div class="card-body overflow-scroll">
+                <div style="display: grid; grid-template-columns: auto 1fr; align-items: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
+                        <path fill="currentColor" fill-rule="evenodd" d="M8.217 5.243C9.145 3.988 10.171 3 11.483 3C13.96 3 16 6.153 16.001 9.907c0 2.29-.986 3.725-2.757 3.725c-1.543 0-2.395-.866-3.924-3.424l-.667-1.123l-.118-.197a55 55 0 0 0-.53-.877l-1.178 2.08c-1.673 2.925-2.615 3.541-3.923 3.541C1.086 13.632 0 12.217 0 9.973C0 6.388 1.995 3 4.598 3q.477-.001.924.122c.31.086.611.22.913.407c.577.359 1.154.915 1.782 1.714m1.516 2.224q-.378-.614-.727-1.133L9 6.326c.845-1.305 1.543-1.954 2.372-1.954c1.723 0 3.102 2.537 3.102 5.653c0 1.188-.39 1.877-1.195 1.877c-.773 0-1.142-.51-2.61-2.87zM4.846 4.756c.725.1 1.385.634 2.34 2.001A212 212 0 0 0 5.551 9.3c-1.357 2.126-1.826 2.603-2.581 2.603c-.777 0-1.24-.682-1.24-1.9c0-2.602 1.298-5.264 2.846-5.264q.136 0 .27.018Z" />
+                    </svg>
+                    <h2>Meta Campaigns</h2>
+                </div>
                 <table class="table table-striped table-bordered" id="campaigns">
                     <thead>
                         <tr>
@@ -348,7 +360,7 @@
                 api.column(13).footer().innerHTML =
                     '$' + pageProfitChena + ' ($' + totalProfitChena + ' total)';
             },
-            'pageLength': 100,
+            "paging": false,
             'buttons': [{
                 extend: 'excel',
                 exportOptions: {
