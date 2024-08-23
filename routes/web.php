@@ -27,7 +27,7 @@ Route::resource('campaign_notes', CampaignNoteController::class);
 
 Route::get('tiktok_campaigns', [TikTokCampaignController::class, 'index'])->name('tiktok_campaigns')->middleware('is_admin');
 
-Route::resource('my_tiktok_campaigns', ViewTikTokCampaignController::class);
+Route::get('my_tiktok_campaigns', [ViewTikTokCampaignController::class, 'index'])->name('my_tiktok_campaigns');
 
 Route::get('tiktok_campaigns-export', [TikTokCampaignController::class, 'exportCSV'])->name('export');
 Route::post('tiktok_campaigns-import', [TikTokCampaignController::class, 'importCSV'])->name('import');

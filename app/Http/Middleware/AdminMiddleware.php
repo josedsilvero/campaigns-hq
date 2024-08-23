@@ -18,7 +18,8 @@ class AdminMiddleware
     {
         $role = Auth::user()->role_id;
         if ($role === null || $role !== 1) {
-            return response('Admin account required.', 401);
+            //return response('Admin account required.', 401);
+            return redirect()->route('my_tiktok_campaigns');
         } else {
             return $next($request);
         }
