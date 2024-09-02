@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('campaigns', ViewTablaMatchCampaignController::class);
 Route::resource('campaign_notes', CampaignNoteController::class);
-Route::resource('history', CampaignHistoryController::class);
+Route::get('my_history', [CampaignHistoryController::class, 'index'])->name('my_history');
 
 Route::get('tiktok_campaigns', [TikTokCampaignController::class, 'index'])->name('tiktok_campaigns')->middleware('is_admin');
 
