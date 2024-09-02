@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CampaignHistoryController;
 use App\Http\Controllers\CampaignNoteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TikTokCampaignController;
@@ -24,6 +25,7 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('campaigns', ViewTablaMatchCampaignController::class);
 Route::resource('campaign_notes', CampaignNoteController::class);
+Route::resource('history', CampaignHistoryController::class);
 
 Route::get('tiktok_campaigns', [TikTokCampaignController::class, 'index'])->name('tiktok_campaigns')->middleware('is_admin');
 
