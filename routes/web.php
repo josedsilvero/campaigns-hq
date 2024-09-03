@@ -23,7 +23,7 @@ Route::middleware('auth')->group(function () {
     })->middleware(['auth', 'verified'])->name('dashboard');
 });
 
-Route::resource('campaigns', ViewTablaMatchCampaignController::class)->middleware('auth');
+Route::get('campaigns', [ViewTablaMatchCampaignController::class, 'index'])->name('campaigns.index')->middleware('auth');
 Route::resource('campaign_notes', CampaignNoteController::class);
 Route::get('my_history', [CampaignHistoryController::class, 'index'])->name('my_history')->middleware('auth');
 

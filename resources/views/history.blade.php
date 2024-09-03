@@ -35,6 +35,9 @@
         <div class='child float-left-child'>
             <button id="right" class="btn btn-secondary"><i class="bi bi-arrow-right"></i></button>
         </div>
+        <div class="child float-left-child" style="margin-left: 20px;">
+            <a id=" historial" href="{{URL::route('campaigns.index'); }}" class="btn btn-outline-danger"><i class="bi bi-file-bar-graph"></i>Reporte actual</a>
+        </div>
     </div>
     <table class="table table-striped table-bordered" id="tiktok_campaigns">
         <thead>
