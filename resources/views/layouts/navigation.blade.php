@@ -62,9 +62,6 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Mi perfil') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('my_history')">
-                            {{ __('Mi historial') }}
-                        </x-dropdown-link>
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
