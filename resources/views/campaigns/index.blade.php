@@ -47,10 +47,18 @@
         <div class="card">
             <div class="card-header">Lista de Campañas</div>
             <div class="row pb-3" style="padding-top: 0.5em; padding-left: 1.5em;">
+                <div class="col-md-3" style="display: none;">
+                    <label>Min date:</label>
+                    <input type="date" id="min" name="min" value="<?php echo date("Y-m-d", strtotime("yesterday")); ?>" placeholder="dd-mm-yyyy" class="date-range-filter"></>
+                </div>
+                <div class="col-md-3" style="display: none;">
+                    <label>Max date:</label>
+                    <input type="date" id="max" name="max" value="<?php echo date("Y-m-d", strtotime("yesterday")); ?>" placeholder="dd-mm-yyyy" class="date-range-filter"></>
+                </div>
                 <div class="col-md-3">
                     <a id="historial" href="{{URL::route('my_history'); }}" class="btn btn-outline-danger"><i class="bi bi-clock-history"></i>Historial</a>
                 </div>
-                <div class="col-md-3">
+                <div class=" col-md-3">
                     <button id="export" class="btn btn-success"><i class="bi bi-file-excel"></i>Export</button>
                 </div>
             </div>
