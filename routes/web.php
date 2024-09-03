@@ -23,13 +23,13 @@ Route::middleware('auth')->group(function () {
     })->middleware(['auth', 'verified'])->name('dashboard');
 });
 
-Route::resource('campaigns', ViewTablaMatchCampaignController::class);
+Route::resource('campaigns', ViewTablaMatchCampaignController::class)->middleware('auth');
 Route::resource('campaign_notes', CampaignNoteController::class);
-Route::get('my_history', [CampaignHistoryController::class, 'index'])->name('my_history');
+Route::get('my_history', [CampaignHistoryController::class, 'index'])->name('my_history')->middleware('auth');
 
 Route::get('tiktok_campaigns', [TikTokCampaignController::class, 'index'])->name('tiktok_campaigns')->middleware('is_admin');
 
-Route::get('my_tiktok_campaigns', [ViewTikTokCampaignController::class, 'index'])->name('my_tiktok_campaigns');
+Route::get('my_tiktok_campaigns', [ViewTikTokCampaignController::class, 'index'])->name('my_tiktok_campaigns')->middleware('auth');
 
 Route::get('tiktok_campaigns-export', [TikTokCampaignController::class, 'exportCSV'])->name('export');
 Route::post('tiktok_campaigns-import', [TikTokCampaignController::class, 'importCSV'])->name('import');
