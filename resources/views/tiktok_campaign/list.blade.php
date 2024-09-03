@@ -49,17 +49,30 @@
                 <td>{{ $list->cost }}</td>
                 <td>{{ $list->conversions }}</td>
                 <td>{{ $list->revenue }}</td>
-                <td>
-                    {{$list->net_revenue}}
-                </td>
-                <td>{{ $list->net_revenue_perc }}</td>
-                <td>{{ $list->ecpa }}</td>
-                <td>{{ $list->lander_visitors }}</td>
-                <td>{{ $list->revenue_events }}</td>
-                <td>{{ $list->conv_valid }}</td>
-                <td>{{ $list->ctr_serp }}</td>
-                <td>{{ $list->avg_rpc }}</td>
-                <td>{{ $list->created_at->format('d/m/Y') }}</td>
+                @if($list->net_revenue<0) <td style="color: red">{{$list->net_revenue }}</td>
+                    <td style="color: red">{{ $list->net_revenue_perc }}%</td>
+                    @elseif($list->net_revenue_perc>=50 && $list->net_revenue>10)
+                    <td style="background-color: yellow">{{$list->net_revenue }}</td>
+                    @if($list->net_revenue_perc>=150)
+                    <td style="background-color: lime">{{ $list->net_revenue_perc }}%</td>
+                    @else
+                    <td style="background-color: yellow">{{ $list->net_revenue_perc }}%</td>
+                    @endif
+                    @else
+                    <td>{{ $list->net_revenue }}</td>
+                    @if($list->net_revenue_perc>150)
+                    <td style="background-color: lime">{{ $list->net_revenue_perc }}%</td>
+                    @else
+                    <td>{{ $list->net_revenue_perc }}%</td>
+                    @endif
+                    @endif()
+                    <td>{{ $list->ecpa }}</td>
+                    <td>{{ $list->lander_visitors }}</td>
+                    <td>{{ $list->revenue_events }}</td>
+                    <td>{{ $list->conv_valid }}</td>
+                    <td>{{ $list->ctr_serp }}</td>
+                    <td>{{ $list->avg_rpc }}</td>
+                    <td>{{ $list->created_at->format('d/m/Y') }}</td>
             </tr>
             @endforeach
         </tbody>
