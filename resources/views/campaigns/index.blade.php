@@ -47,11 +47,11 @@
         <div class="card">
             <div class="card-header">Lista de Campañas</div>
             <div class="row pb-3" style="padding-top: 0.5em; padding-left: 1.5em;">
-                <div class="col-md-3" style="display: none;">
+                <div class="col-md-3">
                     <label>Min date:</label>
                     <input type="date" id="min" name="min" value="<?php echo date("Y-m-d", strtotime("yesterday")); ?>" placeholder="dd-mm-yyyy" class="date-range-filter"></>
                 </div>
-                <div class="col-md-3" style="display: none;">
+                <div class="col-md-3">
                     <label>Max date:</label>
                     <input type="date" id="max" name="max" value="<?php echo date("Y-m-d", strtotime("yesterday")); ?>" placeholder="dd-mm-yyyy" class="date-range-filter"></>
                 </div>

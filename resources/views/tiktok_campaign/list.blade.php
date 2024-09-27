@@ -21,6 +21,8 @@
             <tr>
                 <th>C#</th>
                 <th>Campaign Name</th>
+                <th>CPA</th>
+                <th>Budget</th>
                 <th>Cost</th>
                 <th>Conversions</th>
                 <th>Gross Rev.</th>
@@ -46,6 +48,8 @@
                         {{ $list->campaign_name }}
                     </span>
                 </td>
+                <td>{{ $list->cpa }}</td>
+                <td>{{ $list->budget }}</td>
                 <td>{{ $list->cost }}</td>
                 <td>{{ $list->conversions }}</td>
                 <td>{{ $list->revenue }}</td>
@@ -82,9 +86,9 @@
                 <th></th>
                 <th colspan="1" style="text-align:right">Total Profit:</th>
                 <th></th>
-                <th colspan="2" style="text-align:right">Total %Net:</th>
+                <th colspan="1" style="text-align:right">Total %Net:</th>
                 <th></th>
-                <th colspan="2" style="text-align:right">Profit Chena:</th>
+                <th colspan="1" style="text-align:right">Profit Chena:</th>
                 <th></th>
             </tr>
         </tfoot>
@@ -116,25 +120,25 @@
 
                 // Total over all pages
                 totalCost = api
-                    .column(2)
+                    .column(4)
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 totalProfit = api
-                    .column(4)
+                    .column(6)
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 // Total over this page
                 pageTotalCost = api
-                    .column(2, {
+                    .column(4, {
                         page: 'current'
                     })
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 pageTotalProfit = api
-                    .column(4, {
+                    .column(6, {
                         page: 'current'
                     })
                     .data()
@@ -154,9 +158,9 @@
                     '$' + pageTotalCost + ' ($' + totalCost + ' total)';
                 api.column(4).footer().innerHTML =
                     '$' + pageTotalProfit + ' ($' + totalProfit + ' total)';
-                api.column(7).footer().innerHTML =
+                api.column(6).footer().innerHTML =
                     pageTotalNetPerc + '% (' + totalNetPerc + '% total)';
-                api.column(10).footer().innerHTML =
+                api.column(8).footer().innerHTML =
                     '$' + pageProfitChena + ' ($' + totalProfitChena + ' total)';
             },
             paging: false

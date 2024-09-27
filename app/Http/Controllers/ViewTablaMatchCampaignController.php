@@ -15,7 +15,7 @@ class ViewTablaMatchCampaignController extends Controller
      */
     public function index()
     {
-        $campaigns = ViewTablaMatchCampaign::latest()->paginate(100);
+        $campaigns = ViewTablaMatchCampaign::latest()->paginate(10000);
         /*$user_name = Auth::user()->user_name;
         $campaigns = ViewTablaMatchCampaign::where('user_name', $user_name);*/
         $latestRecord = DB::table('campaign')->max('update_date');

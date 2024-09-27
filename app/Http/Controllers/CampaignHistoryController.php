@@ -9,7 +9,7 @@ class CampaignHistoryController extends Controller
 {
     public function index()
     {
-        $campaigns = CampaignHistory::latest()->paginate(100);
+        $campaigns = CampaignHistory::latest()->paginate(1000);
 
         return view('history', compact('campaigns'));
     }

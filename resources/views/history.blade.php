@@ -163,7 +163,7 @@
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 totalProfit = api
-                    .column(6)
+                    .column(7)
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
@@ -176,7 +176,7 @@
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
                 pageTotalProfit = api
-                    .column(6, {
+                    .column(7, {
                         page: 'current'
                     })
                     .data()
